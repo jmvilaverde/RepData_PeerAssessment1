@@ -1,17 +1,9 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
-    pandoc_args: [
-        "+RTS", "-K64m",
-        "-RTS"
-        ]
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
-```{r echo = TRUE}
+
+```r
 #Zip file is always present into project directory
 dataZipFile <- "activity.zip"
 dataFile <- "activity.csv"
@@ -28,9 +20,25 @@ data <- basedata[!is.na(basedata$steps),]
 
 
 ## What is mean total number of steps taken per day?
-```{r echo = TRUE}
-library(dplyr)
 
+```r
+library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following object is masked from 'package:stats':
+## 
+##     filter
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 #Calculate Total Steps per day
 dataStepsSum <- with(data, aggregate(steps, list(date), sum))
 dataStepsSum <- rename(dataStepsSum, date = Group.1, steps = x)
@@ -40,45 +48,67 @@ dataStepsSum <- select(dataStepsSum, steps, date)
 meanSteps <- mean(dataStepsSum$steps)
 medianSteps <- median(dataStepsSum$steps)
 medianSteps
+```
 
+```
+## [1] 10765
+```
+
+```r
 #Generate graph
 hist(dataStepsSum$steps, breaks = nrow(dataStepsSum))
 abline(v = meanSteps, col = "red")
 abline(v = medianSteps, col = "blue")
 ```
 
-The mean is `r meanSteps`
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
 
-The median is `r medianSteps`
+The mean is 1.0766189\times 10^{4}
+
+The median is 10765
 
 
 ## What is the average daily activity pattern?
 
-```{r echo = TRUE}
+
+```r
 library(ggplot2)
 
 dataIntervalAverage <- with(data, aggregate(steps, list(interval), mean))
 dataIntervalAverage <- rename(dataIntervalAverage, interval = Group.1, steps = x)
 with(dataIntervalAverage, qplot(x = interval, y = steps, geom = "line"))
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+
+```r
 maxIntervalAverage <- dataIntervalAverage[dataIntervalAverage$steps == max(dataIntervalAverage$steps),]
 ```
 
-The maximum average interval of 5-minutes is the interval `r maxIntervalAverage[1]` with an average of `r round(maxIntervalAverage[2],2)` steps.
+The maximum average interval of 5-minutes is the interval 835 with an average of 206.17 steps.
 
 
 ## Imputing missing values
 
-```{r echo = TRUE}
+
+```r
 #Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 naRows <- nrow(basedata[is.na(basedata),])
 naRows
+```
 
+```
+## [1] 2304
+```
+
+```r
 #Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
 ```
 
 I'm going to use the mean for that 5-minute interval with na value for steps
 
-```{r echo = TRUE}
+
+```r
 #Create a new dataset that is equal to the original dataset but with the missing data filled in.
 
 dataToTreat <- basedata
@@ -99,17 +129,25 @@ dataStepsSum <- select(dataStepsSum, steps, date)
 meanStepsTreated <- round(mean(dataStepsSum$steps),2)
 medianStepsTreated <- round(median(dataStepsSum$steps),2)
 medianStepsTreated
+```
 
+```
+## [1] 10766.19
+```
+
+```r
 #Generate graph
 hist(dataStepsSum$steps, breaks = nrow(dataStepsSum))
 abline(v = meanStepsTreated, col = "red")
 abline(v = medianStepsTreated, col = "blue")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
+
 values | data with NA    | data without NA
 ------ | --------------- | ---------------
-mean   | `r meanSteps`   | `r meanStepsTreated`
-median | `r medianSteps` | `r medianStepsTreated`
+mean   | 1.0766189\times 10^{4}   | 1.076619\times 10^{4}
+median | 10765 | 1.076619\times 10^{4}
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
