@@ -45,8 +45,8 @@ dataStepsSum <- rename(dataStepsSum, date = Group.1, steps = x)
 dataStepsSum <- select(dataStepsSum, steps, date)
 
 #Calculate mean and median rounded to 2 decimals
-meanSteps <- mean(dataStepsSum$steps)
-medianSteps <- median(dataStepsSum$steps)
+meanSteps <- round(mean(dataStepsSum$steps),2)
+medianSteps <- round(median(dataStepsSum$steps),2)
 medianSteps
 ```
 
@@ -63,9 +63,10 @@ abline(v = medianSteps, col = "blue")
 
 ![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
 
-The mean is 1.0766189\times 10^{4}
-
-The median is 10765
+.      | values
+------ | ----------------
+mean   | 10766.19
+median | 10765
 
 
 ## What is the average daily activity pattern?
@@ -146,10 +147,10 @@ abline(v = medianStepsTreated, col = "blue")
 
 values | data with NA    | data without NA
 ------ | --------------- | ---------------
-mean   | 1.0766189\times 10^{4}   | 1.076619\times 10^{4}
-median | 10765 | 1.076619\times 10^{4}
+mean   | 10766.19   | 10766.19
+median | 10765 | 10766.19
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
 
